@@ -6,13 +6,13 @@ import { ProductsRepository } from './products.repository';
 @Injectable()
 export class ProductsService {
   constructor(private readonly productsRepository: ProductsRepository) { }
-  
+
   create(createProductDto: CreateProductDto) {
     return 'This action adds a new product';
   }
 
-  findAll() {
-    return `This action returns all products`;
+  async getAllProducts() {
+    return await this.productsRepository.getAllProducts();
   }
 
   findOne(id: number) {
