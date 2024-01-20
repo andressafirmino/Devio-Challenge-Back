@@ -17,6 +17,7 @@ model Order {
   payment     String
   client      String
   isFinished  Boolean
+  code        String
   products    OrderedProduct[]
 }
 
@@ -67,4 +68,3 @@ model Categories {
   image    String
   category String
 }
-
