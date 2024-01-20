@@ -1,0 +1,70 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id          Int              @id @default(autoincrement())
+  observation String?
+  amount      Int
+  payment     String
+  client      String
+  isFinished  Boolean
+  code        String
+  products    OrderedProduct[]
+}
+
+model Product {
+  id             Int              @id @default(autoincrement())
+  name           String
+  price          Int
+  description    String
+  image          String
+  category       String
+  sideDishes     SideDishe[]
+  OrderedProduct OrderedProduct[]
+}
+
+model OrderedProduct {
+  id         Int               @id @default(autoincrement())
+  quantity   Int
+  product    Product           @relation(fields: [productId], references: [id])
+  productId  Int
+  order      Order             @relation(fields: [orderId], references: [id])
+  orderId    Int
+  sideDishes SideDishesOrder[]
+}
+
+model SideDishe {
+  id              Int               @id @default(autoincrement())
+  name            String
+  price           Int
+  description     String
+  image           String
+  Product         Product?          @relation(fields: [productId], references: [id])
+  productId       Int?
+  sideDishesOrder SideDishesOrder[]
+}
+
+model SideDishesOrder {
+  id               Int            @id @default(autoincrement())
+  quantity         Int
+  sideDishes       SideDishe      @relation(fields: [sideDishesId], references: [id])
+  sideDishesId     Int
+  orderedProduct   OrderedProduct @relation(fields: [orderedProductId], references: [id])
+  orderedProductId Int
+}
+
+model Categories {
+  id       Int    @id @default(autoincrement())
+  name     String
+  image    String
+  category String
+}
