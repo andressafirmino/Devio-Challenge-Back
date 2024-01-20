@@ -21,9 +21,6 @@ describe('ProductsController (e2e) tests', () => {
         app.useGlobalPipes(new ValidationPipe());
 
         await app.init();
-        await prisma.product.deleteMany({});
-        await prisma.categories.deleteMany({});
-        await prisma.sideDishe.deleteMany({});
     });
 
     afterAll(async () => {
@@ -32,8 +29,6 @@ describe('ProductsController (e2e) tests', () => {
 
     describe('GET/products', () => {
         it('should respond whith status 200 and get all products', async () => {
-            await new SeedFactory(prisma).createProducts();
-
             const { body } = await request(app.getHttpServer()).get('/').expect(HttpStatus.OK);
 
             expect(body.products).toHaveLength(5);
@@ -51,8 +46,6 @@ describe('ProductsController (e2e) tests', () => {
             );
         });
         it('should respond whith status 200 and get all categories', async () => {
-            await new SeedFactory(prisma).createCategories();
-
             const { body } = await request(app.getHttpServer()).get('/').expect(HttpStatus.OK);
 
             expect(body.categories).toHaveLength(5);
@@ -68,8 +61,6 @@ describe('ProductsController (e2e) tests', () => {
             );
         });
         it('should respond whith status 200 and get all sideDishes', async () => {
-            await new SeedFactory(prisma).createSideDish();
-
             const { body } = await request(app.getHttpServer()).get('/').expect(HttpStatus.OK);
 
             expect(body.sideDish).toHaveLength(3);
