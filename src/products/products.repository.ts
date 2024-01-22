@@ -5,7 +5,7 @@ import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ProductsRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   create(createProductDto: CreateProductDto) {
     return 'This action adds a new product';
@@ -20,8 +20,8 @@ export class ProductsRepository {
     return { categories, products, sideDish };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} product`;
+  async getProductById(id: number) {
+    return await this.prisma.product.findUnique({ where: { id } });
   }
 
   update(id: number, updateProductDto: UpdateProductDto) {

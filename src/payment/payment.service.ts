@@ -1,11 +1,14 @@
-import { BadRequestException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
 import { OrderDto } from './dto/order.dto';
 import { CartProductDto } from './dto/cart-products.dto';
+import { ProductsRepository } from '../products/products.repository';
+import { response } from 'express';
 
 @Injectable()
 export class PaymentService {
+  constructor(private readonly productsRepository: ProductsRepository) { }
 
   checkPayment(name: string, code: string, paymentMethod: string[]) {
     if (name.trim().length === 0 || code === "") new BadRequestException("Name or code not provided");
@@ -13,16 +16,22 @@ export class PaymentService {
     return;
   }
 
-  checkCartProducts(cartProducts: CartProductDto[]) {
-    cartProducts.map(item => {
+  async checkCartProducts(cartProducts: CartProductDto[]) {
+    let erro = 0;
+    await Promise.all(cartProducts.map(async (item) => {
       const { product, additional } = item;
-    })
+      const productFound = await this.productsRepository.getProductById(product.id);
+      console.log(productFound)
+      if (!productFound) erro++;
+    }))    
+    return erro;
   }
   async createPayment(orderDto: OrderDto) {
     const { name, code, paymentMethod, cartProducts } = orderDto;
     this.checkPayment(name, code, paymentMethod);
-    this.checkCartProducts(cartProducts);
-    return await console.log(orderDto);
+    const erro = await this.checkCartProducts(cartProducts);
+    if (erro > 0) throw new NotFoundException("Product not found");
+    return;
   }
 
   findAll() {
