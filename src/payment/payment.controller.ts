@@ -9,8 +9,8 @@ export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
   @Post()
-  createOrder(@Body() orderDto: OrderDto) {
-    return this.paymentService.createPayment(orderDto);
+  async createOrder(@Body() orderDto: OrderDto) {
+    return await this.paymentService.createPayment(orderDto);
   }
 
   @Get()
