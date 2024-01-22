@@ -28,13 +28,11 @@ model Product {
   description    String
   image          String
   category       String
-  sideDishes     SideDishe[]
   OrderedProduct OrderedProduct[]
 }
 
 model OrderedProduct {
   id         Int               @id @default(autoincrement())
-  quantity   Int
   product    Product           @relation(fields: [productId], references: [id])
   productId  Int
   order      Order             @relation(fields: [orderId], references: [id])
@@ -48,18 +46,16 @@ model SideDishe {
   price           Int
   description     String
   image           String
-  Product         Product?          @relation(fields: [productId], references: [id])
-  productId       Int?
   sideDishesOrder SideDishesOrder[]
 }
 
 model SideDishesOrder {
   id               Int            @id @default(autoincrement())
-  quantity         Int
-  sideDishes       SideDishe      @relation(fields: [sideDishesId], references: [id])
-  sideDishesId     Int
-  orderedProduct   OrderedProduct @relation(fields: [orderedProductId], references: [id])
   orderedProductId Int
+  sideDishesId     Int
+  quantity         Int
+  orderedProduct   OrderedProduct @relation(fields: [orderedProductId], references: [id])
+  sideDish         SideDishe      @relation(fields: [sideDishesId], references: [id])
 }
 
 model Categories {

@@ -5,6 +5,7 @@ import { OrderDto } from './dto/order.dto';
 import { CartProductDto } from './dto/cart-products.dto';
 import { ProductsRepository } from '../products/products.repository';
 import { response } from 'express';
+import { OrderAdditionsDto } from './dto/order-additions.dto';
 
 @Injectable()
 export class PaymentService {
@@ -21,7 +22,6 @@ export class PaymentService {
     await Promise.all(cartProducts.map(async (item) => {
       const { product, additional } = item;
       const productFound = await this.productsRepository.getProductById(product.id);
-      console.log(productFound)
       if (!productFound) erro++;
     }))    
     return erro;
