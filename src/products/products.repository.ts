@@ -24,6 +24,10 @@ export class ProductsRepository {
     return await this.prisma.product.findUnique({ where: { id } });
   }
 
+  async getAdditionalById(id: number) {
+    return await this.prisma.sideDishe.findUnique({ where: { id } });
+  }
+
   update(id: number, updateProductDto: UpdateProductDto) {
     return `This action updates a #${id} product`;
   }
