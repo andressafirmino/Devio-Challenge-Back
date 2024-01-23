@@ -1,9 +1,7 @@
-import { IsArray, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsArray, IsNotEmpty } from 'class-validator';
 
 export class PaymentMethodDto {
     @IsArray()
-    @ValidateNested({ each: true })
-    @Type(() => String)
-    paymentMethod: string[];
+    @IsNotEmpty()
+    paymentMethod: string;
 }

@@ -10,7 +10,7 @@ export class PaymentController {
 
   @Post()
   async createOrder(@Body() orderDto: OrderDto) {
-    return await this.paymentService.createPayment(orderDto);
+    return await this.paymentService.createOrder(orderDto);
   }
 
   @Get()

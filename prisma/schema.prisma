@@ -12,7 +12,6 @@ datasource db {
 
 model Order {
   id          Int              @id @default(autoincrement())
-  observation String?
   amount      Int
   payment     String
   client      String
@@ -37,6 +36,7 @@ model OrderedProduct {
   productId  Int
   order      Order             @relation(fields: [orderId], references: [id])
   orderId    Int
+  observation String?
   sideDishes SideDishesOrder[]
 }
 

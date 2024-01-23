@@ -1,4 +1,4 @@
-import { ArrayMinSize, IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { IsArray, IsNotEmpty, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { CartProductDto } from './cart-products.dto';
 
@@ -12,10 +12,9 @@ export class OrderDto {
     @Type(() => CartProductDto)
     cartProducts: CartProductDto[];
 
-    @IsArray()
-    @IsString({ each: true })
-    @ArrayMinSize(1, {message: "paymentMethot cannot be empty"})
-    paymentMethod: string[];
+    @IsString()
+    @IsNotEmpty()
+    paymentMethod: string;
 
     @IsString()
     @IsNotEmpty()

@@ -1,11 +1,44 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePaymentDto } from './dto/create-payment.dto';
 import { UpdatePaymentDto } from './dto/update-payment.dto';
+import { OrderDto } from './dto/order.dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class PaymentRepository {
-  createPayment(createPaymentDto: CreatePaymentDto) {
-    return 'This action adds a new payment';
+  constructor(private readonly prisma: PrismaService) { }
+
+  async createOrder(orderDto: OrderDto, amount: number) {
+    const response = await this.prisma.$transaction(async prisma => {
+      const order = await this.prisma.order.create({
+        data: {
+          client: orderDto.name,
+          amount,
+          code: orderDto.code,
+          payment: orderDto.paymentMethod,
+          isFinished: false
+        }
+      })
+      const products = await Promise.all(orderDto.cartProducts.map(async item => {
+        const orderProduct = await this.prisma.orderedProduct.create({
+          data: {
+            orderId: order.id,
+            productId: item.product.id,
+            observation: item.product.observation
+          }
+        });
+        const sideDishes = await Promise.all(item.additional.map(async item => {
+          return await this.prisma.sideDishesOrder.create({
+            data: {
+              orderedProductId: orderProduct.id,
+              sideDishesId: item.id,
+              quantity: 1
+            }
+          })
+        }))
+      }))
+      return order;
+    })
+    return response;
   }
 
   findAll() {
